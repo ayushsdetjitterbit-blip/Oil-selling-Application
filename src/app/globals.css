@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #fbf6ea;
+  --color-sand: #eadfc4;
+  --color-bark: #3b2a17;
+  --color-leaf: #4a5d23;
+  --color-leaf-dark: #2f3d14;
+  --color-gold: #d9a21b;
+  --color-gold-dark: #a87a0c;
+  --font-serif: Georgia, "Times New Roman", serif;
+}
+
+body { background: var(--color-cream); color: var(--color-bark); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: 9999px; padding: .75rem 1.5rem; font-weight: 600; transition: background .15s; cursor: pointer; }
+.btn-primary { background: var(--color-leaf); color: #fff; }
+.btn-primary:hover { background: var(--color-leaf-dark); }
+.btn-primary:disabled { opacity: .55; cursor: not-allowed; }
+.btn-ghost { border: 1.5px solid var(--color-leaf); color: var(--color-leaf); }
+.btn-ghost:hover { background: var(--color-leaf); color: #fff; }
+.field { width: 100%; border-radius: .75rem; border: 1.5px solid var(--color-sand); background: #fff; padding: .7rem .9rem; outline: none; }
+.field:focus { border-color: var(--color-leaf); }
+.label { display: block; margin-bottom: .25rem; font-size: .8rem; font-weight: 600; color: var(--color-bark); }
