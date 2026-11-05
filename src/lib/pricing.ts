@@ -1,10 +1,10 @@
-import { findVariant } from "./products";
+import { findVariant, MAX_QTY, PRODUCTS, type Product } from "./products";
 
+export { MAX_QTY };
 export type CartLine = { variantId: string; qty: number };
 
 export const FREE_SHIPPING_ABOVE = 999;
 export const SHIPPING_FEE = 60;
-export const MAX_QTY = 20;
 
 export const COUPONS: Record<string, { percent: number; label: string }> = {
   KOLHU10: { percent: 10, label: "10% off" },
@@ -30,11 +30,14 @@ export type Totals = {
   couponApplied: string | null;
 };
 
-/** Single source of truth for prices: used by the cart UI and re-run on the server. */
-export function computeTotals(input: CartLine[], couponCode?: string | null): Totals {
+/**
+ * Single source of truth for prices: used by the cart UI and re-run on the server
+ * with prices from the database, so a tampered browser price is never trusted.
+ */
+export function computeTotals(input: CartLine[], couponCode?: string | null, catalog: Product[] = PRODUCTS): Totals {
   const lines: PricedLine[] = [];
   for (const l of input) {
-    const v = findVariant(l.variantId);
+    const v = findVariant(l.variantId, catalog);
     const qty = Math.min(MAX_QTY, Math.max(0, Math.floor(l.qty)));
     if (!v || qty < 1) continue;
     lines.push({
@@ -61,4 +64,17 @@ export function computeTotals(input: CartLine[], couponCode?: string | null): To
     total: afterDiscount + shipping,
     couponApplied: coupon ? code : null,
   };
+}
+
+export type StockProblem = { variantId: string; label: string; wanted: number; available: number };
+
+/** Cart lines asking for more than is in stock. Empty when stock isn't tracked. */
+export function stockProblems(input: CartLine[], catalog: Product[] = PRODUCTS): StockProblem[] {
+  const out: StockProblem[] = [];
+  for (const l of input) {
+    const v = findVariant(l.variantId, catalog);
+    if (!v || v.size.stock == null || l.qty <= v.size.stock) continue;
+    out.push({ variantId: l.variantId, label: `${v.product.name} (${v.size.label})`, wanted: l.qty, available: v.size.stock });
+  }
+  return out;
 }

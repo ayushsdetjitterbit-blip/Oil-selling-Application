@@ -38,4 +38,14 @@ export const paySchema = z.discriminatedUnion("method", [
   }),
 ]);
 
+export const reviewSchema = z.object({
+  orderId: z.string().trim().regex(/^NO-[0-9A-F]{10}$/, "Invalid order"),
+  slug: z.string().trim().min(1).max(60),
+  rating: z.coerce.number().int().min(1, "Choose a star rating").max(5),
+  body: z.string().trim().min(10, "Please write at least a short sentence (10+ characters)").max(600, "Keep it under 600 characters"),
+});
+
+export const subscribeSchema = z.object({ email: z.string().trim().toLowerCase().email("Enter a valid email").max(120) });
+
 export type CustomerInput = z.infer<typeof customerSchema>;
+export type PayInput = z.infer<typeof paySchema>;

@@ -5,13 +5,19 @@ import { ProductCard } from "./product-card";
 
 export function ShopGrid({ products }: { products: Product[] }) {
   const [cat, setCat] = useState<"All" | Product["category"]>("All");
-  const [sort, setSort] = useState<"popular" | "low" | "high">("popular");
+  const [sort, setSort] = useState<"popular" | "rated" | "low" | "high">("popular");
   const [q, setQ] = useState("");
   const list = useMemo(() => {
     const term = q.trim().toLowerCase();
     const f = products.filter((p) => (cat === "All" || p.category === cat) && (!term || [p.name, p.hindi, p.tagline, ...p.uses].join(" ").toLowerCase().includes(term)));
+    const sold = (p: Product) => p.sold7d ?? 0;
+    const stars = (p: Product) => (p.rating ? p.rating.avg * 1000 + p.rating.count : 0);
+    // Stable sort keeps the catalogue order when sales or ratings are tied (e.g. a brand-new shop).
     return [...f].sort((a, b) =>
-      sort === "low" ? fromPrice(a) - fromPrice(b) : sort === "high" ? fromPrice(b) - fromPrice(a) : b.reviews - a.reviews,
+      sort === "low" ? fromPrice(a) - fromPrice(b)
+      : sort === "high" ? fromPrice(b) - fromPrice(a)
+      : sort === "rated" ? stars(b) - stars(a)
+      : sold(b) - sold(a),
     );
   }, [products, cat, sort, q]);
 
@@ -28,7 +34,8 @@ export function ShopGrid({ products }: { products: Product[] }) {
         </div>
         <input aria-label="Search oils" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search: hair, frying, til…" className="field !w-full sm:!w-64" />
         <select aria-label="Sort" value={sort} onChange={(e) => setSort(e.target.value as typeof sort)} className="field !w-auto">
-          <option value="popular">Most popular</option>
+          <option value="popular">Best selling</option>
+          <option value="rated">Top rated</option>
           <option value="low">Price: low to high</option>
           <option value="high">Price: high to low</option>
         </select>

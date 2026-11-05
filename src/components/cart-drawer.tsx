@@ -2,17 +2,18 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { useCart, useCartTotals } from "@/lib/cart";
-import { findVariant, inr } from "@/lib/products";
+import { useCart, useCartTotals, useStockProblems } from "@/lib/cart";
+import { findVariant, inr, maxQty } from "@/lib/products";
 import { Bottle } from "./bottle";
 import { ShippingProgress } from "./shipping-progress";
 
 export function CartDrawer() {
-  const { items, drawerOpen, closeDrawer, setQty, remove, lastAdded } = useCart();
+  const { items, catalog, drawerOpen, closeDrawer, setQty, remove, lastAdded } = useCart();
   const totals = useCartTotals();
+  const problems = useStockProblems();
   const path = usePathname();
 
-  useEffect(() => { closeDrawer(); }, [path]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { closeDrawer(); }, [path, closeDrawer]);
   useEffect(() => {
     if (!drawerOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && closeDrawer();
@@ -32,32 +33,41 @@ export function CartDrawer() {
         <ul className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
           {items.length === 0 && <li className="py-16 text-center text-bark/60">Your cart is empty.</li>}
           {items.map((it) => {
-            const v = findVariant(it.variantId);
+            const v = findVariant(it.variantId, catalog);
             if (!v) return null;
             const fresh = lastAdded?.variantId === it.variantId && Date.now() - lastAdded.at < 1500;
+            const problem = problems.find((p) => p.variantId === it.variantId);
             return (
-              <li key={it.variantId} className={`flex items-center gap-3 rounded-2xl border bg-paper p-3 transition ${fresh ? "border-gold ring-2 ring-gold/40" : "border-sand"}`}>
-                <div className="grid h-16 w-14 shrink-0 place-items-center rounded-xl bg-sand/50"><Bottle color={v.product.color} className="h-14" /></div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-semibold">{v.product.name}</p>
-                  <p className="text-xs text-bark/60">{v.size.label} · {inr(v.size.price)}</p>
-                  <div className="mt-1 flex items-center gap-3">
-                    <div className="flex items-center rounded-full border border-sand bg-white text-sm">
-                      <button aria-label="Decrease" className="px-2.5" onClick={() => setQty(it.variantId, it.qty - 1)}>−</button>
-                      <span className="w-5 text-center font-semibold">{it.qty}</span>
-                      <button aria-label="Increase" className="px-2.5" onClick={() => setQty(it.variantId, it.qty + 1)}>+</button>
+              <li key={it.variantId} className={`rounded-2xl border bg-paper p-3 transition ${problem ? "border-red-300" : fresh ? "border-gold ring-2 ring-gold/40" : "border-sand"}`}>
+                <div className="flex items-center gap-3">
+                  <div className="grid h-16 w-14 shrink-0 place-items-center rounded-xl bg-sand/50"><Bottle color={v.product.color} className="h-14" /></div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-semibold">{v.product.name}</p>
+                    <p className="text-xs text-bark/60">{v.size.label} · {inr(v.size.price)}</p>
+                    <div className="mt-1 flex items-center gap-3">
+                      <div className="flex items-center rounded-full border border-sand bg-white text-sm">
+                        <button aria-label="Decrease" className="px-2.5" onClick={() => setQty(it.variantId, it.qty - 1)}>−</button>
+                        <span className="w-5 text-center font-semibold">{it.qty}</span>
+                        <button aria-label="Increase" className="px-2.5 disabled:opacity-30" disabled={it.qty >= maxQty(v.size)} onClick={() => setQty(it.variantId, it.qty + 1)}>+</button>
+                      </div>
+                      <button className="text-xs text-red-700 underline" onClick={() => remove(it.variantId)}>Remove</button>
                     </div>
-                    <button className="text-xs text-red-700 underline" onClick={() => remove(it.variantId)}>Remove</button>
                   </div>
+                  <p className="font-bold">{inr(v.size.price * it.qty)}</p>
                 </div>
-                <p className="font-bold">{inr(v.size.price * it.qty)}</p>
+                {problem && (
+                  <p className="mt-2 text-xs font-semibold text-red-800">
+                    {problem.available === 0 ? "Sold out. Please remove it." : `Only ${problem.available} left.`}
+                    {problem.available > 0 && <button className="ml-2 underline" onClick={() => setQty(it.variantId, problem.available)}>Use {problem.available}</button>}
+                  </p>
+                )}
               </li>
             );
           })}
         </ul>
         <div className="space-y-3 border-t border-sand bg-paper px-5 py-4">
           <div className="flex justify-between text-lg font-bold"><span>Subtotal</span><span>{inr(totals.subtotal)}</span></div>
-          <Link href="/checkout" className={`btn btn-primary w-full ${items.length ? "" : "pointer-events-none opacity-50"}`}>Checkout →</Link>
+          <Link href="/checkout" className={`btn btn-primary w-full ${items.length && !problems.length ? "" : "pointer-events-none opacity-50"}`}>Checkout →</Link>
           <Link href="/cart" className="block text-center text-sm underline">View full cart</Link>
         </div>
       </aside>
