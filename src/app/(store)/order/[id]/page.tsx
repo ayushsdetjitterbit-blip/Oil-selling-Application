@@ -9,6 +9,7 @@ import { StatusSteps } from "@/components/status-steps";
 import { OrderTimeline } from "@/components/order-timeline";
 import { AutoRefresh } from "@/components/auto-refresh";
 import { ReviewForm } from "@/components/review-form";
+import { PhoneIcon } from "@/components/icons";
 
 export const metadata = { title: "Your order" };
 
@@ -17,7 +18,7 @@ const HEADLINE = {
   confirmed: "Thank you, your order is confirmed!",
   packed: "Your oil is packed and ready",
   shipped: "Your order is on its way",
-  delivered: "Delivered! Enjoy your oil 🌿",
+  delivered: "Delivered! Enjoy your oil",
   cancelled: "This order was cancelled",
 } as const;
 
@@ -41,7 +42,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
         {confirmed && placed && (
           <div aria-hidden className="pointer-events-none absolute inset-0">
             {Array.from({ length: 18 }).map((_, i) => (
-              <span key={i} className="confetti absolute top-0 h-2.5 w-1.5 rounded-sm" style={{ left: `${(i * 53) % 100}%`, background: ["#e0a81c", "#f4ecd6", "#b4532a"][i % 3], animationDelay: `${(i % 6) * 0.15}s` }} />
+              <span key={i} className="confetti absolute top-0 h-2.5 w-1.5 rounded-sm" style={{ left: `${(i * 53) % 100}%`, background: ["var(--color-gold)", "var(--color-cream)", "var(--color-clay)"][i % 3], animationDelay: `${(i % 6) * 0.15}s` }} />
             ))}
           </div>
         )}
@@ -58,7 +59,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
       )}
 
       {delivered && (
-        <section className="mt-6 rounded-2xl border-2 border-gold/60 bg-gradient-to-br from-[#fff7df] to-paper p-6">
+        <section className="mt-6 rounded-2xl border-2 border-gold/60 bg-gradient-to-br from-tint to-paper p-6">
           <h2 className="font-serif text-2xl font-bold">How was your oil?</h2>
           <p className="mt-1 text-sm text-bark/70">Your review shows on the shop with a verified-buyer badge, under your first name and city.</p>
           <div className="mt-5 space-y-6">
@@ -87,7 +88,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
         <div className="space-y-4">
           <div className="rounded-2xl border border-sand bg-white p-5 text-sm">
             <p className="font-serif text-lg font-bold">Delivery address</p>
-            <p className="mt-2">{order.customer.name}<br />{order.customer.address}<br />{order.customer.city}, {order.customer.state} {order.customer.pincode}<br />📞 {order.customer.phone}</p>
+            <p className="mt-2">{order.customer.name}<br />{order.customer.address}<br />{order.customer.city}, {order.customer.state} {order.customer.pincode}<br /><span className="inline-flex items-center gap-1.5"><PhoneIcon className="h-3.5 w-3.5" />{order.customer.phone}</span></p>
           </div>
           <div className="rounded-2xl border border-sand bg-white p-5 text-sm">
             <p className="font-serif text-lg font-bold">Payment</p>

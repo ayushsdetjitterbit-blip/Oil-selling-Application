@@ -48,7 +48,7 @@ export default function CartPage() {
               return (
                 <li key={it.variantId} className={`rounded-2xl border bg-white p-4 ${problem ? "border-red-300" : "border-sand"}`}>
                   <div className="flex items-center gap-4">
-                    <div className="grid h-20 w-16 shrink-0 place-items-center rounded-lg bg-sand/50"><Bottle color={v.product.color} className="h-16" /></div>
+                    <div className="grid h-20 w-16 shrink-0 place-items-center rounded-lg bg-sand/50"><Bottle color={v.product.color} label={v.product.short} className="h-16" /></div>
                     <div className="min-w-0 flex-1">
                       <Link href={`/shop/${v.product.slug}`} className="font-serif font-bold hover:underline">{v.product.name}</Link>
                       <p className="text-sm text-bark/60">{v.size.label} · {inr(v.size.price)} each</p>

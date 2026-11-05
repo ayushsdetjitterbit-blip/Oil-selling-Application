@@ -10,6 +10,7 @@ import { ProductCard } from "@/components/product-card";
 import { ProductReviews } from "@/components/product-reviews";
 import { Stars } from "@/components/stars";
 import { Reveal } from "@/components/reveal";
+import { DropletIcon, SproutIcon, TruckIcon } from "@/components/icons";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const p = getProduct((await params).slug, PRODUCTS);
@@ -53,10 +54,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               {p.uses.map((u) => <span key={u} className="rounded-full bg-leaf/10 px-3 py-1 text-xs font-semibold text-leaf">{u}</span>)}
             </div>
             <div className="mt-6 rounded-2xl border border-sand bg-white p-5 shadow-[0_20px_40px_-30px_rgba(59,42,23,.5)]"><BuyBox /></div>
-            <ul className="mt-5 space-y-1 text-sm text-bark/70">
-              <li>✓ Wooden kolhu pressed, unrefined</li>
-              <li>✓ Free shipping above ₹999 · Cash on delivery available</li>
-              <li>✓ Natural sediment may settle at the bottom. That is normal for unrefined oil.</li>
+            <ul className="mt-5 space-y-2 text-sm text-bark/75">
+              <li className="flex gap-2"><DropletIcon className="h-4 w-4 shrink-0 text-gold-dark" />Wooden kolhu pressed, unrefined</li>
+              <li className="flex gap-2"><TruckIcon className="h-4 w-4 shrink-0 text-gold-dark" />Free shipping above ₹999 · Cash on delivery available</li>
+              <li className="flex gap-2"><SproutIcon className="h-4 w-4 shrink-0 text-gold-dark" />Natural sediment may settle at the bottom. That is normal for unrefined oil.</li>
             </ul>
           </div>
         </div>

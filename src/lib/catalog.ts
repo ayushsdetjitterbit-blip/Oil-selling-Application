@@ -2,16 +2,19 @@ import "server-only";
 import { cache } from "react";
 import { PRODUCTS, type Product } from "./products";
 import { dbConfigured, query } from "./db";
+import { explainDbError, NOT_CONFIGURED_MESSAGE } from "./db-config";
 import { cached } from "./cache";
 
-export type Catalog = { products: Product[]; live: boolean };
+/** `problem` says why the catalogue isn't live (no database, or the connection failed). */
+export type Catalog = { products: Product[]; live: boolean; problem: string | null };
 
 export const LIVE_STATUSES = ["confirmed", "packed", "shipped", "delivered"] as const;
 const LIVE_SQL = `('confirmed','packed','shipped','delivered')`;
 
-const fallback = (): Catalog => ({
+const fallback = (problem: string): Catalog => ({
   products: PRODUCTS.map((p) => ({ ...p, sizes: p.sizes.map((s) => ({ ...s, stock: null })), rating: null, sold7d: 0 })),
   live: false,
+  problem,
 });
 
 function soldSince(days: number) {
@@ -31,12 +34,16 @@ function soldSince(days: number) {
  * Falls back to the built-in defaults (and logs why) if the database isn't reachable,
  * so the shop can still be browsed.
  */
-const g = globalThis as typeof globalThis & { __noDbDownUntil?: number };
+const g = globalThis as typeof globalThis & { __noDbDownUntil?: number; __noDbProblem?: string; __noWarned?: boolean };
 
 export const getCatalog = cache(async (): Promise<Catalog> => {
-  if (!dbConfigured()) return fallback();
+  if (!dbConfigured()) {
+    if (!g.__noWarned) console.warn("[db] Not connected: " + NOT_CONFIGURED_MESSAGE);
+    g.__noWarned = true;
+    return fallback(NOT_CONFIGURED_MESSAGE);
+  }
   // After a failure, don't make every page wait for the database again for 30 s.
-  if ((g.__noDbDownUntil ?? 0) > Date.now()) return fallback();
+  if ((g.__noDbDownUntil ?? 0) > Date.now()) return fallback(g.__noDbProblem ?? "The database isn't answering.");
   try {
     const [variants, ratings, sold7, sold30] = await Promise.all([
       cached("catalog:variants", 30_000, () =>
@@ -65,10 +72,11 @@ export const getCatalog = cache(async (): Promise<Catalog> => {
         return row ? { ...size, price: row.price, mrp: row.mrp, stock: row.stock } : { ...size, stock: 0 };
       }),
     }));
-    return { products, live: true };
+    return { products, live: true, problem: null };
   } catch (e) {
     g.__noDbDownUntil = Date.now() + 30_000;
-    console.error("[catalog] database unavailable, showing default prices for 30 s:", e instanceof Error ? e.message : e);
-    return fallback();
+    g.__noDbProblem = explainDbError(e);
+    console.error("[db] Can't connect, showing default prices for 30 s. " + g.__noDbProblem + "\n     Details:", e instanceof Error ? e.message : e);
+    return fallback(g.__noDbProblem);
   }
 });

@@ -1,14 +1,16 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArchiveIcon, ChartIcon, MailIcon, ReceiptIcon, StarIcon } from "@/components/icons";
 
-const LINKS = [
-  ["/admin", "Dashboard", "📊"],
-  ["/admin/orders", "Orders", "🧾"],
-  ["/admin/products", "Prices & stock", "🫙"],
-  ["/admin/reviews", "Reviews", "⭐"],
-  ["/admin/subscribers", "Subscribers", "✉️"],
-] as const;
+const I = "h-4 w-4";
+const LINKS: [string, string, React.ReactNode][] = [
+  ["/admin", "Dashboard", <ChartIcon key="d" className={I} />],
+  ["/admin/orders", "Orders", <ReceiptIcon key="o" className={I} />],
+  ["/admin/products", "Prices & stock", <ArchiveIcon key="p" className={I} />],
+  ["/admin/reviews", "Reviews", <StarIcon key="r" className={I} />],
+  ["/admin/subscribers", "Subscribers", <MailIcon key="s" className={I} />],
+];
 
 export function AdminNav() {
   const path = usePathname();

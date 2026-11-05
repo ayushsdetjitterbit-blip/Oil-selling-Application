@@ -18,7 +18,7 @@ export default async function Products() {
       {PRODUCTS.map((p) => (
         <section key={p.slug} className="rounded-2xl border border-sand bg-white p-5">
           <div className="flex items-center gap-3">
-            <span className="grid h-14 w-12 place-items-center rounded-xl bg-sand/50"><Bottle color={p.color} className="h-12" /></span>
+            <span className="grid h-14 w-12 place-items-center rounded-xl bg-sand/50"><Bottle color={p.color} label={p.short} className="h-12" /></span>
             <div><h2 className="font-serif text-lg font-bold">{p.name}</h2><p className="text-xs text-bark/55">{p.category} · {p.tagline}</p></div>
           </div>
           <div className="mt-3">

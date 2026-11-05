@@ -5,6 +5,7 @@ import { useCart } from "@/lib/cart";
 import { inr, isSoldOut, maxQty, perLitre, variantId, type Product } from "@/lib/products";
 import { Bottle } from "./bottle";
 import { StockBadge } from "./stock-badge";
+import { FlameIcon } from "./icons";
 
 type SizeCtx = { product: Product; sizeId: string; setSizeId: (id: string) => void };
 const Ctx = createContext<SizeCtx | null>(null);
@@ -29,9 +30,9 @@ export function ShowcaseBottle() {
   const level = n > 1 ? 0.55 + (0.42 * rank) / (n - 1) : 0.8;
   const scale = n > 1 ? 0.88 + (0.18 * rank) / (n - 1) : 1;
   return (
-    <div className="relative grid min-h-[22rem] place-items-center overflow-hidden rounded-3xl bg-gradient-to-b from-[#fff3d4] to-sand/70 py-10">
+    <div className="relative grid min-h-[22rem] place-items-center overflow-hidden rounded-3xl bg-gradient-to-b from-tint to-sand/70 py-10">
       <div aria-hidden className="absolute bottom-0 h-56 w-56 rounded-full opacity-50 blur-3xl transition-all duration-700" style={{ background: product.color, transform: `scale(${scale})` }} />
-      <Bottle color={product.color} level={level} className="relative h-80 transition-transform duration-700 ease-out" style={{ transform: `scale(${scale})` }} />
+      <Bottle color={product.color} label={product.short} level={level} className="relative h-80 transition-transform duration-700 ease-out" style={{ transform: `scale(${scale})` }} />
       <span key={size.id} className="pop absolute bottom-4 right-4 rounded-full bg-paper/90 px-3 py-1 text-sm font-bold text-leaf-dark shadow">{size.label}</span>
     </div>
   );
@@ -85,7 +86,7 @@ export function BuyBox() {
         {inr(perLitre(size))} per litre
         {inCart > 0 && <> · <b>{inCart}</b> already in your cart</>}
       </p>
-      {product.sold7d ? <p className="mt-2 text-sm font-semibold text-clay">🔥 {product.sold7d} bought in the last 7 days</p> : null}
+      {product.sold7d ? <p className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-clay"><FlameIcon className="h-4 w-4" />{product.sold7d} bought in the last 7 days</p> : null}
     </div>
   );
 }

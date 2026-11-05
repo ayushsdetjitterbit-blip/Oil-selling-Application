@@ -22,7 +22,7 @@ export function RevenueChart({ days }: { days: Day[] }) {
   const step = niceStep(Math.max(0, ...days.map((d) => d.revenue)));
   const top = step * 4;
   const compact = top >= 10_000;
-  const tick = (v: number) => (compact ? `₹${Math.round(v / 1000)}K` : rupees(v));
+  const tick = (v: number) => (v === 0 ? "₹0" : compact ? `₹${+(v / 1000).toFixed(1)}K` : rupees(v));
   const plotH = H - PAD.t - PAD.b;
   const band = (W - PAD.l - PAD.r) / days.length;
   const barW = Math.min(24, band * 0.62);

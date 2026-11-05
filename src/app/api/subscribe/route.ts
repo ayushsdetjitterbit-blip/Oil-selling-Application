@@ -8,7 +8,7 @@ export async function POST(req: Request) {
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Enter a valid email" }, { status: 400 });
   try {
     const added = await subscribe(parsed.data.email);
-    return NextResponse.json({ ok: true, message: added ? "You're on the list! 🌿" : "You're already subscribed." });
+    return NextResponse.json({ ok: true, message: added ? "You're on the list. We'll tell you when a fresh batch is pressed." : "You're already subscribed." });
   } catch (e) {
     return errorResponse(e);
   }

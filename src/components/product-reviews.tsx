@@ -1,5 +1,6 @@
 import type { Review } from "@/lib/reviews";
 import { Stars } from "./stars";
+import { CheckIcon, SproutIcon } from "./icons";
 
 const date = (iso: string) => new Date(iso).toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", year: "numeric" });
 
@@ -11,7 +12,7 @@ export function ProductReviews({ reviews, counts }: { reviews: Review[]; counts:
   if (total === 0) {
     return (
       <div className="rounded-3xl border border-dashed border-sand bg-paper p-8 text-center">
-        <p className="text-3xl">🌿</p>
+        <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-leaf/10 text-leaf"><SproutIcon className="h-6 w-6" /></span>
         <p className="mt-2 font-serif text-xl font-bold">No reviews yet</p>
         <p className="mx-auto mt-1 max-w-md text-sm text-bark/70">Only customers whose order has been delivered can review, so every review here comes from a real buyer.</p>
       </div>
@@ -41,7 +42,7 @@ export function ProductReviews({ reviews, counts }: { reviews: Review[]; counts:
           <li key={r.id} className="rounded-3xl border border-sand bg-paper p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <Stars value={r.rating} />
-              <span className="rounded-full bg-leaf/10 px-2.5 py-0.5 text-xs font-semibold text-leaf">✓ Verified buyer</span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-leaf/10 px-2.5 py-0.5 text-xs font-semibold text-leaf"><CheckIcon className="h-3 w-3" />Verified buyer</span>
             </div>
             <p className="mt-3 text-bark/85">{r.body}</p>
             <p className="mt-3 text-sm font-semibold">{r.name}<span className="font-normal text-bark/55">{r.city ? ` · ${r.city}` : ""} · {date(r.createdAt)}</span></p>

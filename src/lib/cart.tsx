@@ -8,6 +8,8 @@ type CartState = {
   catalog: Product[];
   /** False when the database isn't connected: the shop can be browsed but not bought from. */
   live: boolean;
+  /** Why the database isn't connected (development only). */
+  dbProblem: string | null;
   items: CartLine[];
   ready: boolean;
   coupon: string;
@@ -26,7 +28,7 @@ type CartState = {
 const Ctx = createContext<CartState | null>(null);
 const KEY = "natural-oil-cart-v1";
 
-export function CartProvider({ children, catalog, live }: { children: React.ReactNode; catalog: Product[]; live: boolean }) {
+export function CartProvider({ children, catalog, live, dbProblem = null }: { children: React.ReactNode; catalog: Product[]; live: boolean; dbProblem?: string | null }) {
   const [items, setItems] = useState<CartLine[]>([]);
   const [coupon, setCouponState] = useState("");
   const [ready, setReady] = useState(false);
@@ -85,6 +87,7 @@ export function CartProvider({ children, catalog, live }: { children: React.Reac
     () => ({
       catalog,
       live,
+      dbProblem,
       items,
       ready,
       coupon,
@@ -99,7 +102,7 @@ export function CartProvider({ children, catalog, live }: { children: React.Reac
       closeDrawer,
       lastAdded,
     }),
-    [catalog, live, items, ready, coupon, add, setQty, remove, clear, drawerOpen, openDrawer, closeDrawer, lastAdded],
+    [catalog, live, dbProblem, items, ready, coupon, add, setQty, remove, clear, drawerOpen, openDrawer, closeDrawer, lastAdded],
   );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

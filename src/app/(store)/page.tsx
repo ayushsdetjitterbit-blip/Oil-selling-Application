@@ -8,12 +8,13 @@ import { Kolhu } from "@/components/kolhu";
 import { Counter } from "@/components/counter";
 import { Reveal } from "@/components/reveal";
 import { Stars } from "@/components/stars";
+import { CheckIcon, DropletIcon, FunnelIcon, RotateIcon, SproutIcon } from "@/components/icons";
 
-const steps = [
-  ["Hand-sorted seeds", "Cleaned and sun-dried. No bleaching, no machine shortcuts.", "🌱"],
-  ["Slow wooden kolhu", "A wooden mortar and pestle turns slowly, so the oil never overheats.", "🪵"],
-  ["Settled & filtered", "The oil rests, then is filtered through cloth. Nothing is refined.", "🫗"],
-  ["Bottled fresh", "Small batches, bottled and shipped soon after pressing.", "📦"],
+const steps: [string, string, React.ReactNode][] = [
+  ["Hand-sorted seeds", "Cleaned and sun-dried. No bleaching, no machine shortcuts.", <SproutIcon key="1" className="h-6 w-6" />],
+  ["Slow wooden kolhu", "A wooden mortar and pestle turns slowly, so the oil never overheats.", <RotateIcon key="2" className="h-6 w-6" />],
+  ["Settled & filtered", "The oil rests, then is filtered through cloth. Nothing is refined.", <FunnelIcon key="3" className="h-6 w-6" />],
+  ["Bottled fresh", "Small batches, bottled and shipped soon after pressing.", <DropletIcon key="4" className="h-6 w-6" />],
 ];
 const faqs = [
   ["What does kolhu pressed mean?", "Seeds are crushed slowly in a wooden press at low speed, so the oil stays cool. No solvents, no high heat, no refining."],
@@ -49,7 +50,7 @@ export default async function Home() {
               <Link href="/about" className="btn btn-light">See how it&apos;s made</Link>
             </div>
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-cream/75">
-              <span>✓ 100% unrefined</span><span>✓ Wood pressed</span><span>✓ Cash on delivery</span>
+              {["100% unrefined", "Wood pressed", "Cash on delivery"].map((t) => <span key={t} className="inline-flex items-center gap-1.5"><CheckIcon className="h-4 w-4 text-gold" />{t}</span>)}
             </div>
           </div>
           <HeroBottles />
@@ -97,7 +98,7 @@ export default async function Home() {
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map(([t, d, e], i) => (
               <Reveal key={t} delay={i * 110}><div className="h-full rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur transition hover:-translate-y-1 hover:bg-white/10">
-                <div className="flex items-center justify-between"><span className="text-3xl">{e}</span><span className="text-5xl font-extrabold text-white/10">0{i + 1}</span></div>
+                <div className="flex items-center justify-between"><span className="grid h-12 w-12 place-items-center rounded-2xl bg-white/10 text-gold">{e}</span><span className="text-5xl font-extrabold text-white/10">0{i + 1}</span></div>
                 <p className="mt-4 text-xl font-bold">{t}</p>
                 <p className="mt-1 text-sm text-cream/75">{d}</p>
               </div></Reveal>
@@ -115,7 +116,7 @@ export default async function Home() {
           <div className="grid gap-5 md:grid-cols-3">
             {reviews.map((r, i) => (
               <Reveal key={r.id} delay={i * 110}><figure className="flex h-full flex-col rounded-3xl border border-sand bg-paper p-6 transition hover:-translate-y-1 hover:shadow-lg">
-                <div className="flex items-center justify-between gap-2"><Stars value={r.rating} /><span className="rounded-full bg-leaf/10 px-2.5 py-0.5 text-xs font-semibold text-leaf">✓ Verified</span></div>
+                <div className="flex items-center justify-between gap-2"><Stars value={r.rating} /><span className="inline-flex items-center gap-1 rounded-full bg-leaf/10 px-2.5 py-0.5 text-xs font-semibold text-leaf"><CheckIcon className="h-3 w-3" />Verified</span></div>
                 <blockquote className="mt-3 flex-1 text-bark/85">“{r.body}”</blockquote>
                 <figcaption className="mt-4 text-sm font-semibold">{r.name} <span className="font-normal text-bark/55">· {r.city} · {byName.get(r.productSlug)}</span></figcaption>
               </figure></Reveal>
@@ -143,7 +144,7 @@ export default async function Home() {
       </section>
 
       <section className="mx-auto mt-20 max-w-6xl px-4">
-        <Reveal><div className="rounded-[2rem] bg-gradient-to-r from-gold to-[#f0c24a] p-10 text-center text-leaf-dark md:p-14">
+        <Reveal><div className="rounded-[2rem] bg-gradient-to-r from-gold to-[var(--accent-hover)] p-10 text-center text-leaf-dark md:p-14">
           <h2 className="text-3xl font-bold md:text-4xl">Taste the difference of real oil.</h2>
           <p className="mt-2">Use code <b>KOLHU10</b> at checkout for 10% off your order.</p>
           <Link href="/shop" className="btn btn-primary mt-6">Start shopping</Link>

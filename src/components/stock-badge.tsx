@@ -23,8 +23,8 @@ export function StockBadge({ size, quiet = false }: { size: Size; quiet?: boolea
   }
   if (quiet) return null;
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-leaf/10 px-2.5 py-1 text-xs font-semibold text-leaf">
-      <span aria-hidden className="h-2 w-2 rounded-full bg-leaf" /> In stock
+    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+      <span aria-hidden className="h-2 w-2 rounded-full bg-emerald-600" /> In stock
     </span>
   );
 }

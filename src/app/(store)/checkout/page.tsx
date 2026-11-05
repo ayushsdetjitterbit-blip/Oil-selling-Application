@@ -16,7 +16,7 @@ const FIELDS = [
 ] as const;
 
 export default function Checkout() {
-  const { items, coupon, ready, live } = useCart();
+  const { items, coupon, ready, live, dbProblem } = useCart();
   const totals = useCartTotals();
   const problems = useStockProblems();
   const router = useRouter();
@@ -69,9 +69,10 @@ export default function Checkout() {
             ))}
           </div>
           {!live && (
-            <p role="alert" className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
-              The shop&apos;s database isn&apos;t connected, so orders can&apos;t be placed right now. (Shop owner: run <code>npm run setup</code>.)
-            </p>
+            <div role="alert" className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+              <p>Orders can&apos;t be placed right now because the shop can&apos;t reach its database. Please try again in a few minutes.</p>
+              {dbProblem && <p className="mt-2 border-t border-amber-200 pt-2"><b>Why (only shown in development):</b> {dbProblem}</p>}
+            </div>
           )}
           {problems.length > 0 && (
             <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-800">

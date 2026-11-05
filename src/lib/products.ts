@@ -11,6 +11,8 @@ export type Rating = { avg: number; count: number };
 export type Product = {
   slug: string;
   name: string;
+  /** One word for the bottle label, e.g. "SESAME". */
+  short: string;
   hindi: string;
   category: "Cooking" | "Wellness";
   tagline: string;
@@ -44,6 +46,7 @@ const sizes = (half: Tier, litre: Tier, five: Tier): Size[] => [
 export const PRODUCTS: Product[] = [
   {
     slug: "groundnut-oil",
+    short: "GROUNDNUT",
     name: "Groundnut Oil",
     hindi: "मूंगफली का तेल",
     category: "Cooking",
@@ -56,6 +59,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: "sesame-oil",
+    short: "SESAME",
     name: "Sesame (Gingelly) Oil",
     hindi: "तिल का तेल",
     category: "Cooking",
@@ -69,6 +73,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: "coconut-oil",
+    short: "COCONUT",
     name: "Coconut Oil",
     hindi: "नारियल का तेल",
     category: "Cooking",
@@ -81,6 +86,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: "mustard-oil",
+    short: "MUSTARD",
     name: "Kachi Ghani Mustard Oil",
     hindi: "सरसों का तेल",
     category: "Cooking",
@@ -93,6 +99,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: "almond-oil",
+    short: "ALMOND",
     name: "Sweet Almond Oil",
     hindi: "बादाम का तेल",
     category: "Wellness",
@@ -109,6 +116,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     slug: "castor-oil",
+    short: "CASTOR",
     name: "Castor Oil",
     hindi: "अरंडी का तेल",
     category: "Wellness",

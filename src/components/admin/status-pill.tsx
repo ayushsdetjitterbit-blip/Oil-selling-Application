@@ -1,12 +1,14 @@
 import { PAYMENT_LABEL, STATUS_LABEL, type OrderStatus, type PaymentStatus } from "@/lib/orders";
+import { CheckCircleIcon, ClockIcon, HomeIcon, PackageIcon, TruckIcon, XCircleIcon } from "@/components/icons";
 
-const STATUS_STYLE: Record<OrderStatus, [string, string]> = {
-  awaiting_payment: ["bg-stone-100 text-stone-700", "⏳"],
-  confirmed: ["bg-sky-50 text-sky-900", "✅"],
-  packed: ["bg-violet-50 text-violet-900", "📦"],
-  shipped: ["bg-amber-50 text-amber-900", "🚚"],
-  delivered: ["bg-emerald-50 text-emerald-900", "🏡"],
-  cancelled: ["bg-red-50 text-red-800", "✖"],
+const I = "h-3.5 w-3.5";
+const STATUS_STYLE: Record<OrderStatus, [string, React.ReactNode]> = {
+  awaiting_payment: ["bg-stone-100 text-stone-700", <ClockIcon key="a" className={I} />],
+  confirmed: ["bg-sky-50 text-sky-900", <CheckCircleIcon key="c" className={I} />],
+  packed: ["bg-violet-50 text-violet-900", <PackageIcon key="p" className={I} />],
+  shipped: ["bg-amber-50 text-amber-900", <TruckIcon key="s" className={I} />],
+  delivered: ["bg-emerald-50 text-emerald-900", <HomeIcon key="d" className={I} />],
+  cancelled: ["bg-red-50 text-red-800", <XCircleIcon key="x" className={I} />],
 };
 
 /** Order status with an icon and label, never colour alone. */

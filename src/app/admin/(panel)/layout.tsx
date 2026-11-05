@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/admin-auth";
 import { dbConfigured } from "@/lib/db";
 import { logout } from "@/app/admin/actions";
 import { AdminNav } from "@/components/admin/nav";
+import { LogoMark } from "@/components/logo";
 
 export default async function PanelLayout({ children }: { children: React.ReactNode }) {
   await requireAdmin();
@@ -10,7 +11,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
     <div className="md:grid md:min-h-screen md:grid-cols-[230px_1fr]">
       <aside className="sticky top-0 z-20 flex items-center gap-3 overflow-x-auto bg-leaf-dark px-4 py-3 text-cream md:static md:flex-col md:items-stretch md:gap-6 md:overflow-visible md:px-5 md:py-6">
         <Link href="/admin" className="flex shrink-0 items-center gap-2.5">
-          <span aria-hidden className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-gold to-clay text-white shadow">❂</span>
+          <LogoMark className="h-9 w-9" />
           <span className="hidden leading-tight md:block">
             <span className="block font-serif text-lg font-bold">Natural Oil</span>
             <span className="block text-[11px] font-semibold uppercase tracking-widest text-cream/50">Shop admin</span>

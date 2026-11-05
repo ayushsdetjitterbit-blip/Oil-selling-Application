@@ -1,10 +1,12 @@
 import type { OrderStatus } from "@/lib/orders";
+import { CheckIcon, HomeIcon, PackageIcon, TruckIcon } from "./icons";
 
-const STEPS: [OrderStatus, string, string][] = [
-  ["confirmed", "Confirmed", "✅"],
-  ["packed", "Packed", "📦"],
-  ["shipped", "Shipped", "🚚"],
-  ["delivered", "Delivered", "🏡"],
+const I = "h-4 w-4";
+const STEPS: [OrderStatus, string, React.ReactNode][] = [
+  ["confirmed", "Confirmed", <CheckIcon key="c" className={I} />],
+  ["packed", "Packed", <PackageIcon key="p" className={I} />],
+  ["shipped", "Shipped", <TruckIcon key="s" className={I} />],
+  ["delivered", "Delivered", <HomeIcon key="d" className={I} />],
 ];
 
 /** Progress bar across the four delivery steps; the filled line animates to the current step. */

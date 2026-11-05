@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { BagIcon, XIcon } from "./icons";
 
 type Item = { city: string; product: string; at: string };
 const HIDE_ON = ["/checkout", "/payment", "/order"];
@@ -62,7 +63,7 @@ export function LiveActivity() {
     <div role="status" aria-live="polite"
       className={`fixed bottom-4 left-4 z-30 max-w-[calc(100vw-2rem)] transition-all duration-500 sm:max-w-sm ${visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"}`}>
       <div className="relative flex items-center gap-3 rounded-2xl border border-sand bg-paper p-3 pr-10 shadow-[0_18px_40px_-18px_rgba(59,42,23,.5)]">
-        <span aria-hidden className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-gold/30 to-leaf/20 text-xl">🛍️</span>
+        <span aria-hidden className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-gold/30 to-leaf/20 text-leaf-dark"><BagIcon className="h-5 w-5" /></span>
         <p className="text-sm leading-snug">
           Someone in <b>{titleCase(it.city)}</b> bought <b>{it.product}</b>
           <span className="mt-0.5 block text-xs text-bark/55">{ago(it.at)} · real order</span>
@@ -71,7 +72,7 @@ export function LiveActivity() {
           onClick={() => {
             setOff(true);
             try { sessionStorage.setItem("no-activity-off", "1"); } catch {}
-          }}>✕</button>
+          }}><XIcon className="h-3.5 w-3.5" /></button>
       </div>
     </div>
   );

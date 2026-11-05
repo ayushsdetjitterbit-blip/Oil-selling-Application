@@ -7,13 +7,14 @@ import { PaymentText, StatusPill } from "@/components/admin/status-pill";
 import { ConfirmButton } from "@/components/admin/confirm-button";
 import { OrderTimeline, when } from "@/components/order-timeline";
 import { StatusSteps } from "@/components/status-steps";
+import { ChatIcon, HomeIcon, MailIcon, PackageIcon, PhoneIcon, TruckIcon } from "@/components/icons";
 
 export const metadata = { title: "Order" };
 
-const ACTION: Partial<Record<OrderStatus, [string, string]>> = {
-  packed: ["📦 Mark as packed", "Packed the bottles? The customer sees it right away."],
-  shipped: ["🚚 Mark as shipped", "Handed to the courier."],
-  delivered: ["🏡 Mark as delivered", "The customer can now review their oils. Cash on delivery is marked as collected."],
+const ACTION: Partial<Record<OrderStatus, [React.ReactNode, string]>> = {
+  packed: [<><PackageIcon className="h-4 w-4" /> Mark as packed</>, "Packed the bottles? The customer sees it right away."],
+  shipped: [<><TruckIcon className="h-4 w-4" /> Mark as shipped</>, "Handed to the courier."],
+  delivered: [<><HomeIcon className="h-4 w-4" /> Mark as delivered</>, "The customer can now review their oils. Cash on delivery is marked as collected."],
 };
 
 export default async function AdminOrder({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ done?: string; error?: string }> }) {
@@ -83,9 +84,9 @@ export default async function AdminOrder({ params, searchParams }: { params: Pro
             <p className="mt-2 font-semibold">{c.name}</p>
             <p className="text-bark/75">{c.address}<br />{c.city}, {c.state} {c.pincode}</p>
             <div className="mt-3 flex flex-wrap gap-2">
-              <a href={`tel:+91${c.phone}`} className="rounded-full bg-cream px-3 py-1.5 text-xs font-semibold hover:bg-sand">📞 {c.phone}</a>
-              <a href={`https://wa.me/91${c.phone}?text=${encodeURIComponent(`Hello ${c.name.split(" ")[0]}, this is Natural Oil about your order ${o.id}.`)}`} target="_blank" rel="noreferrer" className="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-900 hover:bg-emerald-100">WhatsApp</a>
-              <a href={`mailto:${c.email}?subject=${encodeURIComponent(`Your Natural Oil order ${o.id}`)}`} className="rounded-full bg-cream px-3 py-1.5 text-xs font-semibold hover:bg-sand">✉️ {c.email}</a>
+              <a href={`tel:+91${c.phone}`} className="inline-flex items-center gap-1.5 rounded-full bg-cream px-3 py-1.5 text-xs font-semibold hover:bg-sand"><PhoneIcon className="h-3.5 w-3.5" />{c.phone}</a>
+              <a href={`https://wa.me/91${c.phone}?text=${encodeURIComponent(`Hello ${c.name.split(" ")[0]}, this is Natural Oil about your order ${o.id}.`)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-900 hover:bg-emerald-100"><ChatIcon className="h-3.5 w-3.5" />WhatsApp</a>
+              <a href={`mailto:${c.email}?subject=${encodeURIComponent(`Your Natural Oil order ${o.id}`)}`} className="inline-flex items-center gap-1.5 rounded-full bg-cream px-3 py-1.5 text-xs font-semibold hover:bg-sand"><MailIcon className="h-3.5 w-3.5" />{c.email}</a>
             </div>
           </div>
           <div className="rounded-2xl border border-sand bg-white p-5">

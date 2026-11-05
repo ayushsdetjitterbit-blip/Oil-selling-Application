@@ -10,7 +10,7 @@ import { randomBytes } from "node:crypto";
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import { Client } from "pg";
-import { pgConfigFromUrl } from "../src/lib/db-config";
+import { explainDbError, pgConfigFromUrl } from "../src/lib/db-config";
 import { applySchema } from "../src/lib/schema";
 
 const ENV_FILE = ".env";
@@ -71,9 +71,7 @@ async function main() {
 }
 
 main().catch((e) => {
-  console.error("\n✗ Setup failed:", e instanceof Error ? e.message : e);
-  if (String(e?.message ?? "").includes("password authentication failed")) {
-    console.error("  The password in the connection string is wrong. Copy the snippet from Neon again with 'Show password' on.");
-  }
+  console.error("\n✗ Setup failed: " + explainDbError(e));
+  console.error("  Details: " + (e instanceof Error ? e.message : String(e)));
   process.exit(1);
 });

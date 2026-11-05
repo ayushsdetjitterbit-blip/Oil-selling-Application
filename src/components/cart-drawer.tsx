@@ -6,6 +6,7 @@ import { useCart, useCartTotals, useStockProblems } from "@/lib/cart";
 import { findVariant, inr, maxQty } from "@/lib/products";
 import { Bottle } from "./bottle";
 import { ShippingProgress } from "./shipping-progress";
+import { XIcon } from "./icons";
 
 export function CartDrawer() {
   const { items, catalog, drawerOpen, closeDrawer, setQty, remove, lastAdded } = useCart();
@@ -27,7 +28,7 @@ export function CartDrawer() {
       <aside role="dialog" aria-label="Your cart" className={`absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-cream shadow-2xl transition-[transform,visibility] duration-300 ease-out ${drawerOpen ? "visible translate-x-0" : "invisible translate-x-full"}`}>
         <div className="flex items-center justify-between border-b border-sand px-5 py-4">
           <p className="font-serif text-2xl font-bold">Your cart</p>
-          <button onClick={closeDrawer} aria-label="Close cart" className="grid h-9 w-9 place-items-center rounded-full hover:bg-sand">✕</button>
+          <button onClick={closeDrawer} aria-label="Close cart" className="grid h-9 w-9 place-items-center rounded-full hover:bg-sand"><XIcon className="h-4 w-4" /></button>
         </div>
         {items.length > 0 && <div className="px-5 pt-4"><ShippingProgress t={totals} /></div>}
         <ul className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
@@ -40,7 +41,7 @@ export function CartDrawer() {
             return (
               <li key={it.variantId} className={`rounded-2xl border bg-paper p-3 transition ${problem ? "border-red-300" : fresh ? "border-gold ring-2 ring-gold/40" : "border-sand"}`}>
                 <div className="flex items-center gap-3">
-                  <div className="grid h-16 w-14 shrink-0 place-items-center rounded-xl bg-sand/50"><Bottle color={v.product.color} className="h-14" /></div>
+                  <div className="grid h-16 w-14 shrink-0 place-items-center rounded-xl bg-sand/50"><Bottle color={v.product.color} label={v.product.short} className="h-14" /></div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-semibold">{v.product.name}</p>
                     <p className="text-xs text-bark/60">{v.size.label} · {inr(v.size.price)}</p>

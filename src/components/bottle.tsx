@@ -4,7 +4,8 @@ import { useId } from "react";
  * Glass bottle illustration. `level` (0–1) sets how full it is; changing it
  * animates the oil rising or falling.
  */
-export function Bottle({ color, className = "", level = 0.72, style }: { color: string; className?: string; level?: number; style?: React.CSSProperties }) {
+export function Bottle({ color, className = "", level = 0.72, style, label }: { color: string; className?: string; level?: number; style?: React.CSSProperties; label?: string }) {
+  const fs = !label ? 10 : label.length > 8 ? 8 : label.length > 6 ? 9 : 10.5;
   const id = useId().replace(/:/g, "");
   const shift = (0.72 - Math.max(0, Math.min(1, level))) * 130;
   return (
@@ -37,11 +38,21 @@ export function Bottle({ color, className = "", level = 0.72, style }: { color: 
         </g>
       </g>
       <rect x="27" y="124" width="66" height="56" rx="7" fill="#fffaf0" />
-      <rect x="27" y="124" width="66" height="56" rx="7" fill="none" stroke="#4a5d23" strokeOpacity=".35" />
-      <text x="60" y="142" textAnchor="middle" fontSize="10" fontWeight="800" fill="#26320f" fontFamily="Georgia,serif" letterSpacing="1">NATURAL</text>
-      <text x="60" y="154" textAnchor="middle" fontSize="10" fontWeight="800" fill="#26320f" fontFamily="Georgia,serif" letterSpacing="3">OIL</text>
-      <line x1="40" x2="80" y1="160" y2="160" stroke="#e0a81c" strokeWidth="1.5" />
-      <text x="60" y="171" textAnchor="middle" fontSize="5.5" fill="#7a5a2b" letterSpacing="1">KOLHU PRESSED</text>
+      <rect x="27" y="124" width="66" height="56" rx="7" fill="none" strokeOpacity=".35" style={{ stroke: "var(--color-leaf)" }} />
+      {label ? (
+        <>
+          <text x="60" y="135" textAnchor="middle" fontSize="4.8" letterSpacing="1.6" fontFamily="Georgia,serif" style={{ fill: "var(--color-gold-dark)" }}>NATURAL OIL</text>
+          <text x="60" y="149" textAnchor="middle" fontSize={fs} fontWeight="800" letterSpacing=".8" fontFamily="Georgia,serif" style={{ fill: "var(--color-leaf-dark)" }}>{label}</text>
+          <text x="60" y="158" textAnchor="middle" fontSize="6.5" fontWeight="700" letterSpacing="3" fontFamily="Georgia,serif" style={{ fill: "var(--color-leaf-dark)" }}>OIL</text>
+        </>
+      ) : (
+        <>
+          <text x="60" y="142" textAnchor="middle" fontSize="10" fontWeight="800" fontFamily="Georgia,serif" letterSpacing="1" style={{ fill: "var(--color-leaf-dark)" }}>NATURAL</text>
+          <text x="60" y="154" textAnchor="middle" fontSize="10" fontWeight="800" fontFamily="Georgia,serif" letterSpacing="3" style={{ fill: "var(--color-leaf-dark)" }}>OIL</text>
+        </>
+      )}
+      <line x1="40" x2="80" y1={label ? 163 : 160} y2={label ? 163 : 160} strokeWidth="1.5" style={{ stroke: "var(--color-gold)" }} />
+      <text x="60" y={label ? 172 : 171} textAnchor="middle" fontSize="5.5" letterSpacing="1" style={{ fill: "var(--color-gold-dark)" }}>KOLHU PRESSED</text>
       <path d="M22 70 C26 90 22 130 24 190 L30 190 C28 130 32 90 28 66 Z" fill={`url(#gl${id})`} />
       <path d="M92 110 L96 190 L90 190 Z" fill="#fff" fillOpacity=".25" />
     </svg>
