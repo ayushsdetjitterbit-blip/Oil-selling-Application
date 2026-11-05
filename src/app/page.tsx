@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { PRODUCTS } from "@/lib/products";
 import { ProductCard } from "@/components/product-card";
-import { Bottle } from "@/components/bottle";
+import { HeroBottles } from "@/components/hero-bottles";
+import { Kolhu } from "@/components/kolhu";
+import { Counter } from "@/components/counter";
+import { Reveal } from "@/components/reveal";
 
 const steps = [
   ["Hand-sorted seeds", "Cleaned and sun-dried. No bleaching, no machine shortcuts.", "🌱"],
@@ -39,12 +42,7 @@ export default function Home() {
               <span>✓ 100% unrefined</span><span>✓ Cold pressed</span><span>✓ Cash on delivery</span>
             </div>
           </div>
-          <div className="relative mx-auto flex h-[22rem] w-full max-w-md items-end justify-center md:h-[30rem]">
-            <div className="absolute inset-x-6 bottom-4 top-10 rounded-full bg-gold/25 blur-3xl" />
-            <Bottle color="#C98A1C" className="float absolute bottom-2 left-0 h-52 md:h-64" />
-            <Bottle color="#D9A21B" className="float relative z-10 h-72 md:h-[26rem]" />
-            <Bottle color="#EFE3B0" className="float absolute bottom-2 right-0 h-52 md:h-64" />
-          </div>
+          <HeroBottles />
         </div>
       </section>
 
@@ -55,12 +53,31 @@ export default function Home() {
         </div>
       </div>
 
+      <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pt-20 md:grid-cols-2">
+        <Reveal>
+          <Kolhu className="mx-auto w-full max-w-sm drop-shadow-xl" />
+        </Reveal>
+        <Reveal delay={120}>
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-gold-dark">Pressed the slow way</p>
+          <h2 className="mt-1 text-4xl font-bold text-leaf-dark md:text-5xl">One slow turn at a time.</h2>
+          <p className="mt-4 text-lg text-bark/75">Our wooden kolhu turns about 14 times a minute. That gentle pace keeps the oil below 40°C, so the flavour, colour and nutrients of the seed stay in the bottle.</p>
+          <div className="mt-8 grid grid-cols-3 gap-4 text-center">
+            {[[12000, "+", "happy kitchens"], [38, "°C", "max press temp"], [0, "", "chemicals added"]].map(([n, suf, l]) => (
+              <div key={l as string} className="rounded-2xl border border-sand bg-paper p-4">
+                <p className="text-3xl font-extrabold text-leaf"><Counter to={n as number} suffix={suf as string} /></p>
+                <p className="mt-1 text-xs text-bark/60">{l}</p>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+      </section>
+
       <section className="mx-auto max-w-6xl px-4 pt-20">
         <div className="mb-8 flex items-end justify-between">
           <div><p className="text-xs font-bold uppercase tracking-[.2em] text-gold-dark">Fresh from the press</p><h2 className="mt-1 text-4xl font-bold text-leaf-dark">Our oils</h2></div>
           <Link href="/shop" className="text-sm font-semibold text-leaf underline underline-offset-4">View all →</Link>
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{PRODUCTS.map((p) => <ProductCard key={p.slug} p={p} />)}</div>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{PRODUCTS.map((p, i) => <Reveal key={p.slug} delay={(i % 3) * 90}><ProductCard p={p} /></Reveal>)}</div>
       </section>
 
       <section className="hero-bg grain relative mt-24 overflow-hidden text-cream">
@@ -69,23 +86,23 @@ export default function Home() {
           <h2 className="mt-1 text-4xl font-bold">From seed to bottle</h2>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map(([t, d, e], i) => (
-              <div key={t} className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+              <Reveal key={t} delay={i * 110}><div className="h-full rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur transition hover:-translate-y-1 hover:bg-white/10">
                 <div className="flex items-center justify-between"><span className="text-3xl">{e}</span><span className="text-5xl font-extrabold text-white/10">0{i + 1}</span></div>
                 <p className="mt-4 text-xl font-bold">{t}</p>
                 <p className="mt-1 text-sm text-cream/75">{d}</p>
-              </div>
+              </div></Reveal>
             ))}
           </div>
         </div>
       </section>
 
       <section className="mx-auto grid max-w-6xl gap-5 px-4 pt-20 md:grid-cols-3">
-        {reviews.map(([n, c, q]) => (
-          <figure key={n} className="rounded-3xl border border-sand bg-paper p-6">
+        {reviews.map(([n, c, q], i) => (
+          <Reveal key={n} delay={i * 110}><figure className="h-full rounded-3xl border border-sand bg-paper p-6 transition hover:-translate-y-1 hover:shadow-lg">
             <p className="text-gold">★★★★★</p>
             <blockquote className="mt-3 text-bark/85">“{q}”</blockquote>
             <figcaption className="mt-4 text-sm font-semibold">{n} <span className="font-normal text-bark/55">· {c}</span></figcaption>
-          </figure>
+          </figure></Reveal>
         ))}
       </section>
 
@@ -102,11 +119,11 @@ export default function Home() {
       </section>
 
       <section className="mx-auto mt-20 max-w-6xl px-4">
-        <div className="rounded-[2rem] bg-gradient-to-r from-gold to-[#f0c24a] p-10 text-center text-leaf-dark md:p-14">
+        <Reveal><div className="rounded-[2rem] bg-gradient-to-r from-gold to-[#f0c24a] p-10 text-center text-leaf-dark md:p-14">
           <h2 className="text-3xl font-bold md:text-4xl">Taste the difference of real oil.</h2>
           <p className="mt-2">Use code <b>KOLHU10</b> at checkout for 10% off your first order.</p>
           <Link href="/shop" className="btn btn-primary mt-6">Start shopping</Link>
-        </div>
+        </div></Reveal>
       </section>
     </>
   );

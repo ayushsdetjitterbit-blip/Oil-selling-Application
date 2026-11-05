@@ -14,10 +14,17 @@ export type Product = {
   sizes: Size[];
 };
 
-const sizes = (base: number): Size[] => [
-  { id: "500ml", label: "500 ml", price: base, mrp: Math.round(base * 1.18) },
-  { id: "1l", label: "1 litre", price: Math.round(base * 1.9), mrp: Math.round(base * 1.9 * 1.18) },
-  { id: "5l", label: "5 litre tin", price: Math.round(base * 8.8), mrp: Math.round(base * 8.8 * 1.18) },
+/**
+ * Prices are set near the middle of what Indian wood-pressed (kachi ghani /
+ * marachekku) brands charged online in Nov 2026 for the same sizes, e.g.
+ * groundnut ₹350–599/L, sesame ₹400–799/L, coconut ₹720–1050/L, mustard ₹379–575/L.
+ * [500ml, 1L, 5L] as [price, mrp] pairs.
+ */
+type Tier = [number, number];
+const sizes = (half: Tier, litre: Tier, five: Tier): Size[] => [
+  { id: "500ml", label: "500 ml", price: half[0], mrp: half[1] },
+  { id: "1l", label: "1 litre", price: litre[0], mrp: litre[1] },
+  { id: "5l", label: "5 litre tin", price: five[0], mrp: five[1] },
 ];
 
 export const PRODUCTS: Product[] = [
@@ -34,7 +41,7 @@ export const PRODUCTS: Product[] = [
     tag: "Bestseller",
     rating: 4.8,
     reviews: 412,
-    sizes: sizes(240),
+    sizes: sizes([249, 299], [449, 549], [2099, 2499]),
   },
   {
     slug: "sesame-oil",
@@ -49,7 +56,7 @@ export const PRODUCTS: Product[] = [
     tag: "Traditional",
     rating: 4.9,
     reviews: 286,
-    sizes: sizes(420),
+    sizes: sizes([299, 349], [549, 650], [2599, 2999]),
   },
   {
     slug: "coconut-oil",
@@ -63,7 +70,7 @@ export const PRODUCTS: Product[] = [
     color: "#EFE3B0",
     rating: 4.7,
     reviews: 358,
-    sizes: sizes(360),
+    sizes: sizes([399, 475], [749, 950], [3499, 4250]),
   },
   {
     slug: "mustard-oil",
@@ -77,7 +84,7 @@ export const PRODUCTS: Product[] = [
     color: "#C9A51A",
     rating: 4.6,
     reviews: 197,
-    sizes: sizes(230),
+    sizes: sizes([249, 299], [449, 550], [2099, 2499]),
   },
   {
     slug: "almond-oil",
@@ -93,8 +100,8 @@ export const PRODUCTS: Product[] = [
     rating: 4.8,
     reviews: 94,
     sizes: [
-      { id: "100ml", label: "100 ml", price: 349, mrp: 420 },
-      { id: "250ml", label: "250 ml", price: 799, mrp: 950 },
+      { id: "100ml", label: "100 ml", price: 349, mrp: 450 },
+      { id: "250ml", label: "250 ml", price: 799, mrp: 999 },
     ],
   },
   {
@@ -110,8 +117,8 @@ export const PRODUCTS: Product[] = [
     rating: 4.5,
     reviews: 121,
     sizes: [
-      { id: "100ml", label: "100 ml", price: 169, mrp: 210 },
-      { id: "250ml", label: "250 ml", price: 389, mrp: 470 },
+      { id: "100ml", label: "100 ml", price: 149, mrp: 199 },
+      { id: "250ml", label: "250 ml", price: 279, mrp: 349 },
     ],
   },
 ];

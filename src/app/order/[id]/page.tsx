@@ -19,9 +19,17 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
       {confirmed && placed && <ClearCart />}
-      <div className="rounded-2xl bg-leaf p-6 text-white">
-        <h1 className="font-serif text-3xl font-bold">{confirmed ? "Thank you, your order is confirmed!" : "Order not paid yet"}</h1>
-        <p className="mt-1 text-white/85">Order ID <b>{order.id}</b>. Save it with your phone number to track the order.</p>
+      <div className="hero-bg grain relative overflow-hidden rounded-3xl p-8 text-white">
+        {confirmed && (
+          <div aria-hidden className="pointer-events-none absolute inset-0">
+            {Array.from({ length: 18 }).map((_, i) => (
+              <span key={i} className="confetti absolute top-0 h-2.5 w-1.5 rounded-sm" style={{ left: `${(i * 53) % 100}%`, background: ["#e0a81c", "#f4ecd6", "#b4532a"][i % 3], animationDelay: `${(i % 6) * 0.15}s` }} />
+            ))}
+          </div>
+        )}
+        {confirmed && <span className="check-pop relative mb-4 grid h-14 w-14 place-items-center rounded-full bg-gold text-2xl font-bold text-leaf-dark">✓</span>}
+        <h1 className="relative font-serif text-3xl font-bold md:text-4xl">{confirmed ? "Thank you, your order is confirmed!" : "Order not paid yet"}</h1>
+        <p className="relative mt-2 text-white/85">Order ID <b>{order.id}</b>. Save it with your phone number to track the order.</p>
       </div>
       {confirmed ? (
         <div className="mt-6 rounded-2xl border border-sand bg-white p-6"><StatusSteps status={order.status} /></div>

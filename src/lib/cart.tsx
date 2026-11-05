@@ -12,6 +12,10 @@ type CartState = {
   remove: (variantId: string) => void;
   clear: () => void;
   setCoupon: (c: string) => void;
+  drawerOpen: boolean;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+  lastAdded: { variantId: string; at: number } | null;
 };
 
 const Ctx = createContext<CartState | null>(null);
@@ -21,6 +25,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartLine[]>([]);
   const [coupon, setCouponState] = useState("");
   const [ready, setReady] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [lastAdded, setLastAdded] = useState<{ variantId: string; at: number } | null>(null);
 
   useEffect(() => {
     try {
@@ -42,6 +48,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items, coupon, ready]);
 
   const add = useCallback((id: string, qty = 1) => {
+    setLastAdded({ variantId: id, at: Date.now() });
+    setDrawerOpen(true);
     setItems((cur) => {
       const found = cur.find((i) => i.variantId === id);
       if (found) return cur.map((i) => (i.variantId === id ? { ...i, qty: Math.min(MAX_QTY, i.qty + qty) } : i));
@@ -70,8 +78,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       remove,
       clear,
       setCoupon: setCouponState,
+      drawerOpen,
+      openDrawer: () => setDrawerOpen(true),
+      closeDrawer: () => setDrawerOpen(false),
+      lastAdded,
     }),
-    [items, ready, coupon, add, setQty, remove, clear],
+    [items, ready, coupon, add, setQty, remove, clear, drawerOpen, lastAdded],
   );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

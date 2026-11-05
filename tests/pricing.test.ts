@@ -4,9 +4,9 @@ import { computeTotals } from "../src/lib/pricing";
 
 test("charges shipping below the free-shipping threshold", () => {
   const t = computeTotals([{ variantId: "groundnut-oil:500ml", qty: 1 }]);
-  assert.equal(t.subtotal, 240);
+  assert.equal(t.subtotal, 249);
   assert.equal(t.shipping, 60);
-  assert.equal(t.total, 300);
+  assert.equal(t.total, 309);
 });
 
 test("free shipping at or above 999 after discount", () => {
@@ -15,7 +15,7 @@ test("free shipping at or above 999 after discount", () => {
 });
 
 test("applies coupon case-insensitively; ignores unknown coupons", () => {
-  assert.equal(computeTotals([{ variantId: "groundnut-oil:5l", qty: 1 }], "kolhu10").discount, 211);
+  assert.equal(computeTotals([{ variantId: "groundnut-oil:5l", qty: 1 }], "kolhu10").discount, 210);
   assert.equal(computeTotals([{ variantId: "groundnut-oil:5l", qty: 1 }], "FAKE").discount, 0);
 });
 
